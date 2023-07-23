@@ -26,7 +26,7 @@
                             <label>Quantity:</label> 
                             <div class="row no-gutters">
                                 <div class="col">
-                                    <button (click)="incrementQuantity(tempCartItem)" class="btn btn-primary btn-sm">
+                                    <button style="margin-left: 1px;" (click)="incrementQuantity(tempCartItem)" class="btn btn-primary btn-sm">
                                         <i class="fas fa-plus"></i>
                                     </button>
 
@@ -47,7 +47,7 @@
                        
                         <div class="col-2"></div>
 
-                        <button style="margin: 5px;" (click)="remove(tempCartItem)" class="btn btn-primary btn-sm">Remove</button>
+                        <button (click)="remove(tempCartItem)" class="btn btn-primary btn-sm">Remove</button>
 
                         <p class="mt-2">Subtotal: {{ tempCartItem.quantity * tempCartItem.unitPrice | currency: 'INR' }}</p>
                     </td>
