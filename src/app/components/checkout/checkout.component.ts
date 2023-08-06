@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { State } from 'src/app/common/state';
 import { Country } from 'src/app/common/country';
 import { Luv2ShopFormService } from 'src/app/services/luv2-shop-form.service';
+import { Luv2ShopValidators } from 'src/app/validators/luv2-shop-validators';
 
 @Component({
   selector: 'app-checkout',
@@ -30,16 +31,17 @@ export class CheckoutComponent implements OnInit{
   ngOnInit(): void {
     this.checkoutFormGroup = this.formBuilder.group({
       customer : this.formBuilder.group({
-        firstName : [''],
-        lastName : [''],
-        email : ['']
+        firstName : new FormControl('', [Validators.required, Validators.minLength(2), Luv2ShopValidators.notOnlyWhitespace]),
+        lastName : new FormControl('', [Validators.required, Validators.minLength(2), Luv2ShopValidators.notOnlyWhitespace]),
+        email : new FormControl('', 
+          [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')])
       }),
       shippingAddress : this.formBuilder.group({
-        street : [''],
-        city : [''],
-        state : [''],
-        country : [''],
-        zipCode : ['']
+        street : new FormControl('', [Validators.required, Validators.minLength(2), Luv2ShopValidators.notOnlyWhitespace]),
+        city : new FormControl('', [Validators.required, Validators.minLength(2), Luv2ShopValidators.notOnlyWhitespace]),
+        state : new FormControl('', [Validators.required]),
+        country : new FormControl('', [Validators.required]),
+        zipCode : new FormControl('', [Validators.required, Validators.minLength(2), Luv2ShopValidators.notOnlyWhitespace])
        
       }),
       billingAddress : this.formBuilder.group({
@@ -89,8 +91,23 @@ export class CheckoutComponent implements OnInit{
   }
   onSubmit(){
     console.log("Handling the submit button");
+    if(this.checkoutFormGroup.invalid){
+      this.checkoutFormGroup.markAllAsTouched();
+    }
+    console.log("checkout formgroup is valid:" +this.checkoutFormGroup.valid);
+
     console.log(this.checkoutFormGroup.get('customer').value);
   }
+
+  get firstName(){return this.checkoutFormGroup.get('customer.firstName');}
+  get lastName(){return this.checkoutFormGroup.get('customer.lastName');}
+  get email(){return this.checkoutFormGroup.get('customer.email');}
+
+  get shippingAddressStreet(){return this.checkoutFormGroup.get('shippingAddress.street');}
+  get shippingAddressCity(){return this.checkoutFormGroup.get('shippingAddress.city');}
+  get shippingAddressState(){return this.checkoutFormGroup.get('shippingAddress.state');}
+  get shippingAddressCountry(){return this.checkoutFormGroup.get('shippingAddress.country');}
+  get shippingAddressZipCode(){return this.checkoutFormGroup.get('shippingAddress.zipCode');}
 
   copyShippingAddressToBillingAddress(event){
     if (event.target.checked) {
