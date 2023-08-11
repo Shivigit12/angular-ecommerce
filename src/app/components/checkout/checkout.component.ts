@@ -5,6 +5,9 @@ import { Country } from 'src/app/common/country';
 import { Luv2ShopFormService } from 'src/app/services/luv2-shop-form.service';
 import { Luv2ShopValidators } from 'src/app/validators/luv2-shop-validators';
 import { CartService } from 'src/app/services/cart.service';
+import { CheckoutService } from 'src/app/services/checkout.service';
+import { Router } from '@angular/router';
+import { Order } from 'src/app/common/order';
 
 @Component({
   selector: 'app-checkout',
@@ -28,7 +31,9 @@ export class CheckoutComponent implements OnInit{
 
   constructor(private formBuilder : FormBuilder,
               private luv2ShopFormService : Luv2ShopFormService,
-              private cartService : CartService){}
+              private cartService : CartService,
+              private checkoutService : CheckoutService,
+              private router : Router){}
 
   ngOnInit(): void {
 
@@ -111,10 +116,27 @@ export class CheckoutComponent implements OnInit{
     console.log("Handling the submit button");
     if(this.checkoutFormGroup.invalid){
       this.checkoutFormGroup.markAllAsTouched();
+      return;
     }
-    console.log("checkout formgroup is valid:" +this.checkoutFormGroup.valid);
+    // set up order
+    let order = new Order();
+    order.totalPrice = this.totalPrice;
+    order.totalQuantity = this.totalQuantity;
 
-    console.log(this.checkoutFormGroup.get('customer').value);
+    //get cart items
+    const cartItems = this.cartService.cartItems;
+
+    //create order items from cart items
+
+    //populate purchase - Customer
+
+    //populate purchase - shipping address
+
+    //populate purchase - billing address
+
+    //populate purchase - order and orderItems
+
+    //call REST API via the CheckoutService
   }
 
   get firstName(){return this.checkoutFormGroup.get('customer.firstName');}
